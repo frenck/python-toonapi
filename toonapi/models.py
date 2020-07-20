@@ -20,6 +20,8 @@ from .util import (
     convert_kwh,
     convert_negative_none,
     convert_temperature,
+    convert_m3,
+    convert_lmin
 )
 
 
@@ -360,22 +362,23 @@ class WaterUsage:
     installed: Optional[bool] = None
     is_smart: Optional[bool] = None
     meter: Optional[int] = None
+    day_cost: Optional[float] = None
 
     last_updated_from_display: Optional[datetime] = None
     last_updated = datetime.utcnow()
 
     def update_from_dict(self, data: Dict[str, Any]) -> None:
         """Update this WaterUsage object with data from a dictionary."""
-        self.average = process_data(data, "avgValue", self.average)
-        self.current = process_data(data, "value", self.current)
-        self.day_average = process_data(data, "avgDayValue", self.day_average)
-        self.day_usage = process_data(data, "dayUsage", self.day_usage)
+        self.average = process_data(data, "avgValue", self.average, convert_lmin)
+        self.current = process_data(data, "value", self.current, convert_lmin)
+        self.day_average = process_data(data, "avgDayValue", self.day_average, convert_m3)
+        self.day_usage = process_data(data, "dayUsage", self.day_usage, convert_m3)
         self.installed = process_data(
             data, "installed", self.installed, convert_boolean
         )
         self.is_smart = process_data(data, "isSmart", self.is_smart, convert_boolean)
-        self.meter = process_data(data, "meterReading", self.meter)
-
+        self.meter = process_data(data, "meterReading", self.meter, convert_m3)
+        self.day_cost = process_data(data, "dayCost", self.day_cost)
         self.last_updated_from_display = process_data(
             data,
             "lastUpdatedFromDisplay",
