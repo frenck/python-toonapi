@@ -355,14 +355,14 @@ class GasUsage:
 class WaterUsage:
     """Object holding Toon water usage information."""
 
-    average: Optional[int] = None
-    current: Optional[int] = None
-    day_average: Optional[int] = None
+    average: Optional[float] = None
+    current: Optional[float] = None
+    day_average: Optional[float] = None
     day_cost: Optional[float] = None
-    day_usage: Optional[int] = None
+    day_usage: Optional[float] = None
     installed: Optional[bool] = None
     is_smart: Optional[bool] = None
-    meter: Optional[int] = None
+    meter: Optional[float] = None
 
     last_updated_from_display: Optional[datetime] = None
     last_updated = datetime.utcnow()
