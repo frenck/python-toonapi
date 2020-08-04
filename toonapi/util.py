@@ -41,3 +41,17 @@ def convert_cm3(value: int) -> Optional[float]:
 def convert_negative_none(value: int) -> Optional[int]:
     """Convert an negative int value from the ToonAPI to a NoneType."""
     return None if value < 0 else value
+
+
+def convert_m3(value: int) -> Optional[float]:
+    """Convert a value from the ToonAPI to a M3 value."""
+    if value is None:
+        return None
+    return round(float(value) / 1000.0, 2)
+
+
+def convert_lmin(value: int) -> Optional[float]:
+    """Convert a value from the ToonAPI to a L/MINUTE value."""
+    if value is None:
+        return None
+    return round(float(value) / 60.0, 1)
