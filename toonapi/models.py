@@ -88,6 +88,7 @@ class ThermostatInfo:
     boiler_module_connected: Optional[bool] = None
     burner_state: Optional[int] = None
     current_display_temperature: Optional[float] = None
+    current_humidity: Optional[int] = None
     current_modulation_level: Optional[int] = None
     current_setpoint: Optional[float] = None
     error_found: Optional[bool] = None
@@ -162,6 +163,9 @@ class ThermostatInfo:
             "currentDisplayTemp",
             self.current_display_temperature,
             convert_temperature,
+        )
+        self.current_humidity = process_data(
+            data, "currentHumidity", self.current_humidity
         )
         self.current_modulation_level = process_data(
             data, "currentModulationLevel", self.current_modulation_level
