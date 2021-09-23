@@ -230,12 +230,7 @@ class Toon:
             data={
                 "applicationId": application_id,
                 "callbackUrl": url,
-                "subscribedActions": [
-                    "BoilerErrorInfo",
-                    "GasUsage",
-                    "PowerUsage",
-                    "Thermostat",
-                ],
+                "subscribedActions": ["BoilerErrorInfo", "PowerUsage", "Thermostat"],
             },
         )
 
