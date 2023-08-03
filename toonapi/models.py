@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Any, Callable, Dict, Optional
 
 from .const import (
@@ -105,7 +105,7 @@ class ThermostatInfo:
     set_by_load_shifthing: Optional[int] = None
 
     last_updated_from_display: Optional[datetime] = None
-    last_updated: datetime = datetime.utcnow()
+    last_updated: datetime = datetime.now(tz=timezone.utc).replace(tzinfo=None)
 
     @property
     def burner(self) -> Optional[bool]:
@@ -214,7 +214,7 @@ class ThermostatInfo:
             self.last_updated_from_display,
             convert_datetime,
         )
-        self.last_updated = datetime.utcnow()
+        self.last_updated = datetime.now(tz=timezone.utc).replace(tzinfo=None)
 
 
 @dataclass
@@ -240,7 +240,7 @@ class PowerUsage:
     meter_produced_low: Optional[float] = None
 
     last_updated_from_display: Optional[datetime] = None
-    last_updated: datetime = datetime.utcnow()
+    last_updated: datetime = datetime.now(tz=timezone.utc).replace(tzinfo=None)
 
     @property
     def day_usage(self) -> Optional[float]:
@@ -316,7 +316,7 @@ class PowerUsage:
             self.last_updated_from_display,
             convert_datetime,
         )
-        self.last_updated = datetime.utcnow()
+        self.last_updated = datetime.now(tz=timezone.utc).replace(tzinfo=None)
 
 
 @dataclass
@@ -332,7 +332,7 @@ class GasUsage:
     meter: Optional[float] = None
 
     last_updated_from_display: Optional[datetime] = None
-    last_updated: datetime = datetime.utcnow()
+    last_updated: datetime = datetime.now(tz=timezone.utc).replace(tzinfo=None)
 
     def update_from_dict(self, data: Dict[str, Any]) -> None:
         """Update this GasUsage object with data from a dictionary."""
@@ -352,7 +352,7 @@ class GasUsage:
             self.last_updated_from_display,
             convert_datetime,
         )
-        self.last_update = datetime.utcnow()
+        self.last_update = datetime.now(tz=timezone.utc).replace(tzinfo=None)
 
 
 @dataclass
@@ -369,7 +369,7 @@ class WaterUsage:
     meter: Optional[float] = None
 
     last_updated_from_display: Optional[datetime] = None
-    last_updated = datetime.utcnow()
+    last_updated = datetime.now(tz=timezone.utc).replace(tzinfo=None)
 
     def update_from_dict(self, data: Dict[str, Any]) -> None:
         """Update this WaterUsage object with data from a dictionary."""
@@ -391,7 +391,7 @@ class WaterUsage:
             self.last_updated_from_display,
             convert_datetime,
         )
-        self.last_update = datetime.utcnow()
+        self.last_update = datetime.now(tz=timezone.utc).replace(tzinfo=None)
 
 
 class Status:
@@ -404,7 +404,7 @@ class Status:
     water_usage: WaterUsage = WaterUsage()
 
     last_updated_from_display: Optional[datetime] = None
-    last_updated: datetime = datetime.utcnow()
+    last_updated: datetime = datetime.now(tz=timezone.utc).replace(tzinfo=None)
     server_time: Optional[datetime] = None
 
     def __init__(self, agreement: Agreement):
@@ -427,6 +427,6 @@ class Status:
             )
         if "serverTime" in data:
             self.server_time = convert_datetime(data["serverTime"])
-        self.last_updated = datetime.utcnow()
+        self.last_updated = datetime.now(tz=timezone.utc).replace(tzinfo=None)
 
         return self
