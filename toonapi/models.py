@@ -268,6 +268,8 @@ class PowerUsage:
         """Calculate current solar covering current usage."""
         if self.current_solar is None or self.current is None:
             return None
+        if self.current == 0:
+            return 0
         return min(100, round((self.current_solar / self.current) * 100))
 
     def update_from_dict(self, data: dict[str, Any]) -> None:
