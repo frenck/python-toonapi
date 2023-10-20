@@ -220,6 +220,7 @@ class ThermostatInfo:
 @dataclass
 class PowerUsage:
     """Object holding Toon power usage information."""
+    
     average_produced: float | None = None
     average_solar: float | None = None
     average: float | None = None
