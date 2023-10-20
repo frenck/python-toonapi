@@ -332,7 +332,7 @@ class GasUsage:
     is_smart: bool | None = None
     meter: float | None = None
 
-    last_updated_from_display: Optional[datetime] = None
+    last_updated_from_display: datetime | None = None
     last_updated_from_display: datetime | None = None
     last_updated: datetime = datetime.now(tz=timezone.utc).replace(tzinfo=None)
 
