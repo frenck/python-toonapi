@@ -333,7 +333,6 @@ class GasUsage:
     meter: float | None = None
 
     last_updated_from_display: datetime | None = None
-    last_updated_from_display: datetime | None = None
     last_updated: datetime = datetime.now(tz=timezone.utc).replace(tzinfo=None)
 
     def update_from_dict(self, data: dict[str, Any]) -> None:
