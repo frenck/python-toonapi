@@ -18,11 +18,11 @@ def read(*parts):
     """Read file."""
     filename = os.path.join(os.path.abspath(os.path.dirname(__file__)), *parts)
     sys.stdout.write(filename)
-    with open(filename, encoding="utf-8", mode="rt") as fp:
+    with open(filename, encoding="utf-8") as fp:
         return fp.read()
 
 
-with open("README.md") as readme_file:
+with open("README.md", encoding="utf-8") as readme_file:
     readme = readme_file.read()
 
 setup(
@@ -34,8 +34,11 @@ setup(
         "Intended Audience :: Developers",
         "License :: OSI Approved :: MIT License",
         "Natural Language :: English",
-        "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
         "Programming Language :: Python :: 3",
         "Topic :: Software Development :: Libraries :: Python Modules",
     ],
