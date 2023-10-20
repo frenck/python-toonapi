@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from datetime import datetime, timezone
-from typing import Any, Callable, Dict, Optional
+from typing import Any, Callable
 
 from .const import (
     ACTIVE_STATE_HOLIDAY,
@@ -26,10 +26,10 @@ from .util import (
 
 
 def process_data(
-    data: Dict[str, Any],
+    data: dict[str, Any],
     key: str,
     current_value: Any,
-    conversion: Optional[Callable[[Any], Any]] = None,
+    conversion: Callable[[Any], Any] | None = None,
 ) -> Any:
     """test."""
     if key not in data:
@@ -48,21 +48,21 @@ def process_data(
 class Agreement:
     """Object holding a Toon customer utility Agreement."""
 
-    agreement_id_checksum: Optional[str] = None
-    agreement_id: Optional[str] = None
-    city: Optional[str] = None
-    display_common_name: Optional[str] = None
-    display_hardware_version: Optional[str] = None
-    display_software_version: Optional[str] = None
-    heating_type: Optional[str] = None
-    house_number: Optional[str] = None
-    is_toon_solar: Optional[bool] = None
-    is_toonly: Optional[bool] = None
-    postal_code: Optional[str] = None
-    street: Optional[str] = None
+    agreement_id_checksum: str | None = None
+    agreement_id: str | None = None
+    city: str | None = None
+    display_common_name: str | None = None
+    display_hardware_version: str | None = None
+    display_software_version: str | None = None
+    heating_type: str | None = None
+    house_number: str | None = None
+    is_toon_solar: bool | None = None
+    is_toonly: bool | None = None
+    postal_code: str | None = None
+    street: str | None = None
 
     @staticmethod
-    def from_dict(data: Dict[str, Any]) -> Agreement:
+    def from_dict(data: dict[str, Any]) -> Agreement:
         """Return an Agreement object from a data dictionary."""
         return Agreement(
             agreement_id_checksum=data.get("agreementIdChecksum"),
@@ -84,72 +84,72 @@ class Agreement:
 class ThermostatInfo:
     """Object holding Toon thermostat information."""
 
-    active_state: Optional[int] = None
-    boiler_module_connected: Optional[bool] = None
-    burner_state: Optional[int] = None
-    current_display_temperature: Optional[float] = None
-    current_humidity: Optional[int] = None
-    current_modulation_level: Optional[int] = None
-    current_setpoint: Optional[float] = None
-    error_found: Optional[bool] = None
-    has_boiler_fault: Optional[bool] = None
-    have_opentherm_boiler: Optional[bool] = None
-    holiday_mode: Optional[bool] = None
-    next_program: Optional[int] = None
-    next_setpoint: Optional[float] = None
-    next_state: Optional[int] = None
-    next_time: Optional[datetime] = None
-    opentherm_communication_error: Optional[bool] = None
-    program_state: Optional[int] = None
-    real_setpoint: Optional[float] = None
-    set_by_load_shifthing: Optional[int] = None
+    active_state: int | None = None
+    boiler_module_connected: bool | None = None
+    burner_state: int | None = None
+    current_display_temperature: float | None = None
+    current_humidity: int | None = None
+    current_modulation_level: int | None = None
+    current_setpoint: float | None = None
+    error_found: bool | None = None
+    has_boiler_fault: bool | None = None
+    have_opentherm_boiler: bool | None = None
+    holiday_mode: bool | None = None
+    next_program: int | None = None
+    next_setpoint: float | None = None
+    next_state: int | None = None
+    next_time: datetime | None = None
+    opentherm_communication_error: bool | None = None
+    program_state: int | None = None
+    real_setpoint: float | None = None
+    set_by_load_shifthing: int | None = None
 
-    last_updated_from_display: Optional[datetime] = None
+    last_updated_from_display: datetime | None = None
     last_updated: datetime = datetime.now(tz=timezone.utc).replace(tzinfo=None)
 
     @property
-    def burner(self) -> Optional[bool]:
+    def burner(self) -> bool | None:
         """Return if burner is on based on its state."""
         if self.burner_state is None:
             return None
         return bool(self.burner_state)
 
     @property
-    def hot_tapwater(self) -> Optional[bool]:
+    def hot_tapwater(self) -> bool | None:
         """Return if burner is on based on its state."""
         if self.burner_state is None:
             return None
         return self.burner_state == BURNER_STATE_TAP_WATER
 
     @property
-    def heating(self) -> Optional[bool]:
+    def heating(self) -> bool | None:
         """Return if burner is pre heating based on its state."""
         if self.burner_state is None:
             return None
         return self.burner_state == BURNER_STATE_ON
 
     @property
-    def pre_heating(self) -> Optional[bool]:
+    def pre_heating(self) -> bool | None:
         """Return if burner is pre heating based on its state."""
         if self.burner_state is None:
             return None
         return self.burner_state == BURNER_STATE_PREHEATING
 
     @property
-    def program(self) -> Optional[bool]:
+    def program(self) -> bool | None:
         """Return if program mode is turned on."""
         if self.program_state is None:
             return None
         return self.program_state in [PROGRAM_STATE_ON, PROGRAM_STATE_OVERRIDE]
 
     @property
-    def program_overridden(self) -> Optional[bool]:
+    def program_overridden(self) -> bool | None:
         """Return if program mode is overriden."""
         if self.program_state is None:
             return None
         return self.program_state == PROGRAM_STATE_OVERRIDE
 
-    def update_from_dict(self, data: Dict[str, Any]) -> None:
+    def update_from_dict(self, data: dict[str, Any]) -> None:
         """Update this ThermostatInfo object with data from a dictionary."""
         self.active_state = process_data(
             data, "activeState", self.active_state, convert_negative_none
@@ -220,57 +220,58 @@ class ThermostatInfo:
 @dataclass
 class PowerUsage:
     """Object holding Toon power usage information."""
+    average_produced: float | None = None
+    average_solar: float | None = None
+    average: float | None = None
+    current_produced: int | None = None
+    current_solar: int | None = None
+    current: int | None = None
+    day_average: float | None = None
+    day_cost: float | None = None
+    day_high_usage: float | None = None
+    day_low_usage: float | None = None
+    day_max_solar: int | None = None
+    day_produced_solar: float | None = None
+    is_smart: bool | None = None
+    meter_high: float | None = None
+    meter_low: float | None = None
+    meter_produced_high: float | None = None
+    meter_produced_low: float | None = None
 
-    average_produced: Optional[float] = None
-    average_solar: Optional[float] = None
-    average: Optional[float] = None
-    current_produced: Optional[int] = None
-    current_solar: Optional[int] = None
-    current: Optional[int] = None
-    day_average: Optional[float] = None
-    day_cost: Optional[float] = None
-    day_high_usage: Optional[float] = None
-    day_low_usage: Optional[float] = None
-    day_max_solar: Optional[int] = None
-    day_produced_solar: Optional[float] = None
-    is_smart: Optional[bool] = None
-    meter_high: Optional[float] = None
-    meter_low: Optional[float] = None
-    meter_produced_high: Optional[float] = None
-    meter_produced_low: Optional[float] = None
-
-    last_updated_from_display: Optional[datetime] = None
+    last_updated_from_display: datetime | None = None
     last_updated: datetime = datetime.now(tz=timezone.utc).replace(tzinfo=None)
 
     @property
-    def day_usage(self) -> Optional[float]:
+    def day_usage(self) -> float | None:
         """Calculate day total usage."""
         if self.day_high_usage is None or self.day_low_usage is None:
             return None
         return round(self.day_high_usage + self.day_low_usage, 2)
 
     @property
-    def day_to_grid_usage(self) -> Optional[float]:
+    def day_to_grid_usage(self) -> float | None:
         """Calculate day total to grid."""
         if self.day_usage is None or self.day_produced_solar is None:
             return None
         return abs(min(0.0, round(self.day_usage - self.day_produced_solar, 2)))
 
     @property
-    def day_from_grid_usage(self) -> Optional[float]:
+    def day_from_grid_usage(self) -> float | None:
         """Calculate day total to grid."""
         if self.day_produced_solar is None or self.day_usage is None:
             return None
         return abs(min(0.0, round(self.day_produced_solar - self.day_usage, 2)))
 
     @property
-    def current_covered_by_solar(self) -> Optional[int]:
+    def current_covered_by_solar(self) -> int | None:
         """Calculate current solar covering current usage."""
         if self.current_solar is None or self.current is None:
             return None
+        if self.current == 0:
+            return 0
         return min(100, round((self.current_solar / self.current) * 100))
 
-    def update_from_dict(self, data: Dict[str, Any]) -> None:
+    def update_from_dict(self, data: dict[str, Any]) -> None:
         """Update this PowerUsage object with data from a dictionary."""
         self.average = process_data(data, "avgValue", self.average)
         self.average_produced = process_data(
@@ -323,18 +324,19 @@ class PowerUsage:
 class GasUsage:
     """Object holding Toon gas usage information."""
 
-    average: Optional[float] = None
-    current: Optional[float] = None
-    day_average: Optional[float] = None
-    day_cost: Optional[float] = None
-    day_usage: Optional[float] = None
-    is_smart: Optional[bool] = None
-    meter: Optional[float] = None
+    average: float | None = None
+    current: float | None = None
+    day_average: float | None = None
+    day_cost: float | None = None
+    day_usage: float | None = None
+    is_smart: bool | None = None
+    meter: float | None = None
 
     last_updated_from_display: Optional[datetime] = None
+    last_updated_from_display: datetime | None = None
     last_updated: datetime = datetime.now(tz=timezone.utc).replace(tzinfo=None)
 
-    def update_from_dict(self, data: Dict[str, Any]) -> None:
+    def update_from_dict(self, data: dict[str, Any]) -> None:
         """Update this GasUsage object with data from a dictionary."""
         self.average = process_data(data, "avgValue", self.average, convert_cm3)
         self.current = process_data(data, "value", self.current, convert_cm3)
@@ -359,19 +361,19 @@ class GasUsage:
 class WaterUsage:
     """Object holding Toon water usage information."""
 
-    average: Optional[float] = None
-    current: Optional[float] = None
-    day_average: Optional[float] = None
-    day_cost: Optional[float] = None
-    day_usage: Optional[float] = None
-    installed: Optional[bool] = None
-    is_smart: Optional[bool] = None
-    meter: Optional[float] = None
+    average: float | None = None
+    current: float | None = None
+    day_average: float | None = None
+    day_cost: float | None = None
+    day_usage: float | None = None
+    installed: bool | None = None
+    is_smart: bool | None = None
+    meter: float | None = None
 
-    last_updated_from_display: Optional[datetime] = None
+    last_updated_from_display: datetime | None = None
     last_updated = datetime.now(tz=timezone.utc).replace(tzinfo=None)
 
-    def update_from_dict(self, data: Dict[str, Any]) -> None:
+    def update_from_dict(self, data: dict[str, Any]) -> None:
         """Update this WaterUsage object with data from a dictionary."""
         self.average = process_data(data, "avgValue", self.average, convert_lmin)
         self.current = process_data(data, "value", self.current, convert_lmin)
@@ -403,15 +405,15 @@ class Status:
     gas_usage: GasUsage = GasUsage()
     water_usage: WaterUsage = WaterUsage()
 
-    last_updated_from_display: Optional[datetime] = None
+    last_updated_from_display: datetime | None = None
     last_updated: datetime = datetime.now(tz=timezone.utc).replace(tzinfo=None)
-    server_time: Optional[datetime] = None
+    server_time: datetime | None = None
 
     def __init__(self, agreement: Agreement):
         """Initialize an empty ToonAPI Status class."""
         self.agreement = agreement
 
-    def update_from_dict(self, data: Dict[str, Any]) -> Status:
+    def update_from_dict(self, data: dict[str, Any]) -> Status:
         """Update the status object with data received from the ToonAPI."""
         if "thermostatInfo" in data:
             self.thermostat.update_from_dict(data["thermostatInfo"])

@@ -4,7 +4,7 @@ from __future__ import annotations
 import asyncio
 import json
 import socket
-from typing import Any, Awaitable, Callable, Dict, List, Optional
+from typing import Any, Awaitable, Callable
 
 import aiohttp
 import async_timeout
@@ -33,22 +33,22 @@ from .models import Agreement, Status
 class Toon:
     """Main class for handling connections with the Quby ToonAPI."""
 
-    agreement_id: Optional[str] = None
-    _agreements: Optional[List[Agreement]] = None
-    _status: Optional[Status] = None
+    agreement_id: str | None = None
+    _agreements: list[Agreement] | None = None
+    _status: Status | None = None
     _close_session: bool = False
 
-    _webhook_refresh_timer_task: Optional[asyncio.TimerHandle] = None
-    _webhook_url: Optional[str] = None
+    _webhook_refresh_timer_task: asyncio.TimerHandle | None = None
+    _webhook_url: str | None = None
 
     def __init__(
         self,
         *,
         request_timeout: int = 8,
-        session: Optional[aiohttp.client.ClientSession] = None,
-        token_refresh_method: Optional[Callable[[], Awaitable[str]]] = None,
+        session: aiohttp.client.ClientSession | None = None,
+        token_refresh_method: Callable[[], Awaitable[str]] | None = None,
         token: str,
-        user_agent: Optional[str] = None,
+        user_agent: str | None = None,
     ) -> None:
         """Initialize connection with the Quby ToonAPI."""
         self._session = session
@@ -70,7 +70,7 @@ class Toon:
         self,
         uri: str = "",
         *,
-        data: Optional[Any] = None,
+        data: Any | None = None,
         method: str = "GET",
         no_agreement: bool = False,
     ) -> Any:
@@ -79,7 +79,9 @@ class Toon:
             self.token = await self.token_refresh_method()
 
         if self._status is None and self.agreement_id and not no_agreement:
-            self.activate_agreement(agreement_id=self.agreement_id,)
+            await self.activate_agreement(
+                agreement_id=self.agreement_id,
+            )
 
         url = URL.build(
             scheme=TOON_API_SCHEME,
@@ -109,7 +111,11 @@ class Toon:
         try:
             with async_timeout.timeout(self.request_timeout):
                 response = await self._session.request(
-                    method, url, json=data, headers=headers, ssl=True,
+                    method,
+                    url,
+                    json=data,
+                    headers=headers,
+                    ssl=True,
                 )
         except asyncio.TimeoutError as exception:
             raise ToonConnectionTimeoutError(
@@ -146,9 +152,9 @@ class Toon:
     async def activate_agreement(
         self,
         *,
-        agreement_id: Optional[str] = None,
-        display_common_name: Optional[str] = None,
-        agreement: Optional[Agreement] = None,
+        agreement_id: str | None = None,
+        display_common_name: str | None = None,
+        agreement: Agreement | None = None,
     ) -> Agreement:
         """Set the active agreement for this Toon instance."""
         if self._agreements is None:
@@ -170,7 +176,7 @@ class Toon:
 
         raise ToonError("Agreement could not be found on the linked account")
 
-    async def agreements(self, force_update: bool = False) -> List[Agreement]:
+    async def agreements(self, force_update: bool = False) -> list[Agreement]:
         """Return the agreement(s) that are associated with the utility customer."""
         if self._agreements is None or force_update:
             agreements = await self._request(
@@ -181,7 +187,7 @@ class Toon:
             ]
         return self._agreements
 
-    async def update(self, data: Dict[str, Any] = None) -> Optional[Status]:
+    async def update(self, data: dict[str, Any] | None = None) -> Status | None:
         """Get all information in a single call."""
         assert self._status
         if data is None:
